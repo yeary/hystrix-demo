@@ -1,6 +1,7 @@
 package com.demo.command;
 
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.HystrixObservableCommand;
 import rx.Observable;
 import rx.Subscriber;
@@ -13,8 +14,13 @@ public class HelloWorldHystrixObservableCommand extends HystrixObservableCommand
 
     private String name;
 
+    private static final Setter cachedSetter =
+            Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ExampleGroup"))
+                    .andCommandKey(HystrixCommandKey.Factory.asKey("HelloWorld"));
+
     public HelloWorldHystrixObservableCommand(String name) {
-        super(HystrixCommandGroupKey.Factory.asKey("ExampleGroup"));
+        //super(HystrixCommandGroupKey.Factory.asKey("ExampleGroup"));
+        super(cachedSetter);
         this.name = name;
     }
 

@@ -16,10 +16,12 @@ public class HelloWorldHystrixCommand extends HystrixCommand<String> {
     @Override
     protected String run() {
         return "Hello " + name;
+        //throw new RuntimeException("this is a error");
     }
 
     @Override
     protected String getFallback() {
+        this.getExecutionException().printStackTrace();
         return name+ ": this request is error";
     }
 }
