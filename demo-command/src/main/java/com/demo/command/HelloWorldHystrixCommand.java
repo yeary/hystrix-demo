@@ -17,4 +17,9 @@ public class HelloWorldHystrixCommand extends HystrixCommand<String> {
     protected String run() {
         return "Hello " + name;
     }
+
+    @Override
+    protected String getFallback() {
+        return name+ ": this request is error";
+    }
 }
