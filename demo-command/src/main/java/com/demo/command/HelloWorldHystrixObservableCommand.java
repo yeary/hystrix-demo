@@ -1,8 +1,6 @@
 package com.demo.command;
 
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandKey;
-import com.netflix.hystrix.HystrixObservableCommand;
+import com.netflix.hystrix.*;
 import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
@@ -16,7 +14,16 @@ public class HelloWorldHystrixObservableCommand extends HystrixObservableCommand
 
     private static final Setter cachedSetter =
             Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ExampleGroup"))
-                    .andCommandKey(HystrixCommandKey.Factory.asKey("HelloWorld"));
+                    .andCommandKey(HystrixCommandKey.Factory.asKey("HelloWorld"))
+                    .andCommandPropertiesDefaults(    // 配置熔断器
+                            HystrixCommandProperties.Setter()
+                                    .withCircuitBreakerEnabled(true)
+                                    .withCircuitBreakerRequestVolumeThreshold(3)
+                                    .withCircuitBreakerErrorThresholdPercentage(80));
+//                      .withCircuitBreakerForceOpen(true)	// 置为true时，所有请求都将被拒绝，直接到fallback
+//                		.withCircuitBreakerForceClosed(true)	// 置为true时，将忽略错误
+//                		.withExecutionIsolationStrategy(ExecutionIsolationStrategy.SEMAPHORE)	// 信号量隔离
+//                		.withExecutionTimeoutInMilliseconds(5000)
 
     public HelloWorldHystrixObservableCommand(String name) {
         //super(HystrixCommandGroupKey.Factory.asKey("ExampleGroup"));
